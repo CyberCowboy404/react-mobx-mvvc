@@ -1,0 +1,10 @@
+.books-page {
+  &--switcher {
+    button:first-child {
+      margin-right: 10px;
+    }
+    &__current {
+      font-weight: bold;
+    }
+  }
+}
