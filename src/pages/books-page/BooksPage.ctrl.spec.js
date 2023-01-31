@@ -153,6 +153,60 @@ describe('BooksController', () => {
     });
   });
 
+  describe('createBook', () => {
+    it('should set loading to false when requst started', () => {
+      controller.model.createBook = jest.fn();
+      expect(controller.isLoading).toEqual(false);
+      controller.createBook();
+      expect(controller.isLoading).toEqual(true);
+    });
+
+    it('should properly create book', async () => {
+      controller.model.createBook = jest.fn().mockResolvedValue({
+        ok: true,
+      });
+
+      expect(controller.isLoading).toEqual(false);
+      await controller.createBook();
+
+      expect(controller.model.createBook).toHaveBeenCalledTimes(1);
+      expect(controller.isLoading).toEqual(false);
+      expect(controller.error).toEqual(null);
+    });
+
+    it('should return error on request', async () => {
+      const error = { error: true };
+      controller.model.createBook = jest.fn().mockImplementation(() => {
+        throw error;
+      });
+
+      expect(controller.isLoading).toEqual(false);
+      await controller.createBook();
+
+      expect(controller.model.createBook).toHaveBeenCalledTimes(1);
+      expect(controller.error).toEqual(error);
+      expect(controller.isLoading).toEqual(false);
+    });
+
+    it('should not create books if arguments not valid', async () => {
+      let data;
+      data = await controller.createBook();
+      expect(data).toEqual('Invalid book data');
+
+      data = await controller.createBook({});
+      expect(data).toEqual('Invalid book data');
+
+      data = await controller.createBook({name: 'test'});
+      expect(data).toEqual('Invalid book data');
+
+      data = await controller.createBook({author: 'test'});
+      expect(data).toEqual('Invalid book data');
+
+      data = await controller.createBook({author: '', name: ''});
+      expect(data).toEqual('Invalid book data');
+    });
+  });
+
   it('should set private to true when calling setPrivate', () => {
     controller.setPrivate();
     expect(controller.isPublic).toEqual(false);

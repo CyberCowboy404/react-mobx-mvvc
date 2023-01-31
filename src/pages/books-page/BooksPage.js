@@ -13,7 +13,7 @@ const BooksPage = (...app) => {
 
   useEffect(() => {
     controller.getPublicBooks();
-  }, []);
+  }, [controller]);
 
   return (
     <article className="books-page">

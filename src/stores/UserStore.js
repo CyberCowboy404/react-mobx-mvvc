@@ -1,7 +1,7 @@
 import { makeAutoObservable } from "mobx";
 
 export default class AuthStore {
-  user = 'postnikov';
+  user = 'Nickolas';
 
   constructor(rootStore) {
     this.rootStore = rootStore;
@@ -10,13 +10,5 @@ export default class AuthStore {
 
   get currentUser() {
     return this.user;
-  }
-
-  async logout() {
-    this.user = null;
-  }
-
-  get isLoggedIn() {
-    return !!this.user;
   }
 }

@@ -10,7 +10,7 @@ export default class BooksController {
   error = null;
 
   constructor({ user }) {
-    this.model = new BooksModel();
+    this.model = new BooksModel({ user });
     this.user = user;
     makeAutoObservable(this);
   }
@@ -19,12 +19,14 @@ export default class BooksController {
     this.isLoading = true;
 
     try {
-      await this.model.createBook(book);
+      return await this.model.createBook(book);
     } catch (e) {
-      console.debug(e);
+      this.error = e;
+      // console.debug(e);
+      return this.error;
+    } finally {
+      this.isLoading = false;
     }
-
-    this.isLoading = false;
   }
 
   getPublicBooks = async () => {
@@ -38,10 +40,10 @@ export default class BooksController {
     }
 
     try {
-      this.publicBooks = await this.model.getPublicBooks(this.user);
+      this.publicBooks = await this.model.getPublicBooks();
     } catch (e) {
       this.error = e;
-      console.debug(e);
+      // console.debug(e);
     } finally {
       this.isLoading = false;
       this.setPublic();
@@ -59,10 +61,10 @@ export default class BooksController {
     }
 
     try {
-      this.privateBooks = await this.model.getPrivateBooks(this.user);
+      this.privateBooks = await this.model.getPrivateBooks();
     } catch (e) {
       this.error = e;
-      console.debug(e);
+      // console.debug(e);
     } finally {
       this.isLoading = false;
       this.setPrivate();
